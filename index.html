@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anhänger Verleih</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #eef2f7;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #111827;
+      --accent-2: #2563eb;
+      --line: #dbe3ee;
+      --shadow: 0 18px 50px rgba(17, 24, 39, 0.10);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top left, #ffffff 0%, #f5f7fb 48%, #eef2f7 100%);
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
+    .section { padding: 36px 0; }
+    .hero { padding: 24px 0 20px; }
+    .hero-card {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.8);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 28px;
+    }
+    .hero-copy { display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 6px 4px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #e7eefc;
+      color: #1d4ed8;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 4rem); line-height: 0.98; letter-spacing: -0.03em; }
+    .lead { margin: 0; font-size: 1.08rem; line-height: 1.65; color: var(--muted); max-width: 62ch; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    .button:hover { transform: translateY(-1px); }
+    .button-primary { background: var(--accent); color: #fff; }
+    .button-secondary { background: #fff; border: 1px solid var(--line); color: var(--text); }
+    .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
+    .stat, .card, .fact, .price-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 24px rgba(17, 24, 39, 0.05);
+    }
+    .stat { padding: 14px; }
+    .stat-label, .fact-label { color: var(--muted); font-size: 0.85rem; margin-bottom: 6px; }
+    .stat-value, .fact-value { font-size: 1.1rem; font-weight: 800; }
+    .hero-image-wrap { display: grid; gap: 12px; }
+    .hero-image-main { aspect-ratio: 4 / 3; border-radius: 24px; overflow: hidden; background: var(--surface-2); border: 1px solid var(--line); }
+    .hero-image-main img, .gallery-card img, .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .thumb { aspect-ratio: 1.2 / 1; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--surface-2); }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 20px; }
+    .section-head h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.4rem); letter-spacing: -0.02em; }
+    .section-head p { margin: 0; color: var(--muted); max-width: 52ch; line-height: 1.6; }
+    .cards-3, .cards-4, .pricing-grid, .gallery-grid, .facts-grid { display: grid; gap: 16px; }
+    .cards-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cards-4, .pricing-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .gallery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .facts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card, .fact { padding: 20px; }
+    .card h3 { margin: 0 0 10px; font-size: 1.1rem; }
+    .card p, .card li { color: var(--muted); line-height: 1.6; }
+    .pricing-wrap {
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+      border: 1px solid #d7e5ff;
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .price-card { padding: 20px; display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden; }
+    .price-card.featured { border: 2px solid #2563eb; box-shadow: 0 16px 32px rgba(37, 99, 235, 0.12); }
+    .price-badge { position: absolute; top: 12px; right: 12px; background: #2563eb; color: #fff; border-radius: 999px; padding: 6px 10px; font-size: 0.75rem; font-weight: 800; }
+    .price-title { font-size: 1rem; font-weight: 800; }
+    .price-value { font-size: 2rem; font-weight: 900; line-height: 1; letter-spacing: -0.03em; }
+    .price-sub { color: var(--muted); font-size: 0.92rem; margin-top: -6px; }
+    .price-list, .check-list { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.7; }
+    .gallery-card { aspect-ratio: 4 / 3; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
+    .cta {
+      background: #111827;
+      color: #fff;
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+      box-shadow: var(--shadow);
+    }
+    .cta p, .cta li { color: rgba(255,255,255,0.8); }
+    .contact-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+    .contact-line { margin: 0 0 10px; font-size: 1rem; }
+    .footer { padding: 24px 0 48px; color: var(--muted); font-size: 0.95rem; }
+    @media (max-width: 1080px) {
+      .hero-card, .cta { grid-template-columns: 1fr; }
+      .pricing-grid, .cards-4, .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .cards-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .pricing-grid, .gallery-grid, .facts-grid, .cards-4, .hero-stats { grid-template-columns: 1fr; }
+      .section-head { flex-direction: column; align-items: start; }
+      .hero-card, .pricing-wrap, .cta { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <div class="hero-card">
+        <div class="hero-copy">
+          <div class="eyebrow" id="eyebrow"></div>
+          <h1 id="heroTitle"></h1>
+          <p class="lead" id="heroLead"></p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#mietmodelle">Mietmodelle ansehen</a>
+            <a class="button button-secondary" href="#kontakt">Jetzt anfragen</a>
+          </div>
+
+          <div class="hero-stats" id="heroStats"></div>
+        </div>
+
+        <div class="hero-image-wrap">
+          <div class="hero-image-main">
+            <img id="heroImage" alt="Anhänger Hauptbild" />
+          </div>
+          <div class="hero-thumbs" id="heroThumbs"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="eckdaten">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Eckdaten & Voraussetzungen</h2></div>
+        </div>
+        <div class="facts-grid" id="factsGrid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="mietmodelle">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Mietmodelle</h2></div>
+        </div>
+        <div class="pricing-wrap">
+          <div class="pricing-grid" id="pricingGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="beschreibung">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Beschreibung</h2></div>
+        </div>
+        <div class="cards-3" id="featureCards"></div>
+      </div>
+    </section>
+
+    <section class="section" id="galerie">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Bildergalerie</h2></div>
+        </div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="hinweise">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Wichtige Hinweise</h2></div>
+        </div>
+        <div class="cards-4" id="infoCards"></div>
+      </div>
+    </section>
+
+    <section class="section" id="kontakt">
+      <div class="container">
+        <div class="cta">
+          <div>
+            <h2 id="ctaTitle" style="margin-top:0; margin-bottom:12px; font-size:clamp(1.6rem, 3vw, 2.4rem);"></h2>
+            <p id="ctaText" style="margin:0 0 16px; line-height:1.7;"></p>
+            <ul class="check-list" id="ctaList" style="color: rgba(255,255,255,0.84);"></ul>
+          </div>
+          <div class="contact-card" id="contactCard"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container" id="footerNote"></div>
+  </footer>
+
+  <script>
+    const DATA = {
+      meta: {
+        pageTitle: "Werkzeuganhänger mieten",
+        eyebrow: "Werkzeuganhänger zu vermieten",
+        heroTitle: "Top ausgestatteter Werkzeuganhänger",
+        heroLead: "Praktischer Werkzeuganhänger Werkzeugen aller Art, top Ausstattung mit flexiblen Mietmodellen. Ideal für Vereine, Veranstalter, Gartenprojekte, Zeltfeste oder Heimwerker."
+      },
+      images: {
+        basePath: "bilder/",
+        hero: "anhaenger-seite-links.jpeg",
+        thumbs: [
+          { file: "anhaenger-seite-rechts.jpeg", alt: "Seitenansicht des Anhängers" },
+          { file: "anhaenger-innen-1.jpeg", alt: "Innenraum des Anhängers" },
+          { file: "anhaenger-innen-4.jpeg", alt: "Innenraum des Anhängers" }
+        ],
+        gallery: [
+          { file: "anhaenger-seite-links.jpeg", alt: "Seitenansicht des Anhängers" },
+          { file: "anhaenger-seite-rechts.jpeg", alt: "Seitenansicht des Anhängers" },
+        
+          { file: "anhaenger-innen-1.jpeg", alt: "Innenraum des Anhängers" },
+          { file: "anhaenger-innen-2.jpeg", alt: "Innenraum des Anhängers" },
+          { file: "anhaenger-innen-3.jpeg", alt: "Innenraum des Anhängers" },
+          { file: "anhaenger-innen-4.jpeg", alt: "Innenraum des Anhängers" },
+          { file: "anhaenger-innen-5.jpeg", alt: "Innenraum des Anhängers" },
+          { file: "anhaenger-innen-6.jpeg", alt: "Innenraum des Anhängers" },
+          { file: "anhaenger-innen-7.jpeg", alt: "Innenraum des Anhängers" },
+        
+          { file: "anhaenger-ausstattung-makita-bohrschrauber.jpeg", alt: "Makita Bohrschrauber" },
+          { file: "anhaenger-ausstattung-makita-schlagbohrmaschine.jpeg", alt: "Makita Schlagbohrmaschine" },
+          { file: "anhaenger-ausstattung-makita-schlagschrauber.jpeg", alt: "Makita Schlagschrauber" },
+          { file: "anhaenger-ausstattung-makita-winkelschleifer-gross.jpeg", alt: "Makita Winkelschleifer groß" },
+          { file: "anhaenger-ausstattung-makita-winkelschleifer-klein.jpeg", alt: "Makita Winkelschleifer klein" },
+          { file: "anhaenger-ausstattung-makita-stichsaege.jpeg", alt: "Makita Stichsäge" },
+          { file: "anhaenger-ausstattung-makita-tauchsaege.jpeg", alt: "Makita Tauchsäge" },
+          { file: "anhaenger-ausstattung-makita-hobel.jpeg", alt: "Makita Hobel" },
+          { file: "anhaenger-ausstattung-makita-oberfraese.jpeg", alt: "Makita Oberfräse" },
+          { file: "anhaenger-ausstattung-makita-multitool.jpeg", alt: "Makita Multitool" },
+          { file: "anhaenger-ausstattung-makita-schwingschleifer.jpeg", alt: "Makita Schwingschleifer" },
+          { file: "anhaenger-ausstattung-makita-motorsaege.jpeg", alt: "Makita Motorsäge" },
+          { file: "anhaenger-ausstattung-makita-laubblaeser.jpeg", alt: "Makita Laubbläser" }
+        ]
+      },
+      heroStats: [
+        { label: "Außenmaße (lxbxh)", value: "500 × 190 × 270 cm" },
+        { label: "Zul. Gesamtgewicht", value: "3.000 kg" },
+        { label: "Führerschein", value: "Klasse BE" }
+      ],
+      facts: [
+        { label: "Außenmaße (lxbxh)", value: "370 × 180 × 200 cm" },
+        { label: "Eigengewicht", value: "2850kg" },
+        { label: "Zulässiges Gesamtgewicht", value: "3000 kg" },
+        { label: "Nutzlast", value: "150kg" },
+        { label: "Führerschein", value: "Klasse BE" },
+        { label: "Anhängerart", value: "Tandem / Gebremst / Koffer" },
+      ],
+      pricing: [
+          {
+          title: "1 Tag",
+          price: "€ 70",
+          sub: "24 Stunden Nutzung",
+          points: [ "Ideal für Umzug, Baustelle oder Garten", "Flexible Rückgabe nach Absprache", "zzgl. Variable Kosten"]
+        },
+        {
+          title: "Wochenende",
+          price: "€ 150",
+          featured: true,
+          badge: "Beliebt",
+	  sub: "Fr bis So / nach Vereinbarung",
+          points: ["Meistgewähltes Modell", "Ohne Stress", "Beliebt für Heimwerker", "zzgl. Variable Kosten"]
+        },
+        {
+          title: "1 Woche",
+          price: "€ 300",
+          sub: "Langzeitmiete",
+          points: ["Attraktiver Wochenpreis", "z.B. Fest-Aufbau", "Weitere Staffelungen auf Anfrage", "zzgl. Variable kosten"]
+        },
+ 	{
+          title: "Variable Kosten",
+          price: "€ ???",
+          sub: "Verbrauchsmaterial/Schäden",
+          points: ["Verschleiß, Kleinmaterial,...", "Beschädigungen (Fehlbedienung, Mutwillig)", "erspart zeitaufwendinge Fahrten zum Baumarkt"]
+        }
+      ],
+      features: [
+        {
+          title: "Gerüstet für jeden Einsatz",
+          text: "Mit einer Vielzahl an Akku-Geräten, Stiel-Werkzeugen, Leitern, Kabel, Druckluft, Verbrauchsmaterial, u.v.m. bist du für jede Aufgabe bereit"
+        },
+        {
+          title: "Es werde Licht",
+          text: "Dank 5,5kW Generator und Lichtmast (4x 300W in 7m Höhe) wird auch in der Pampa die Nacht zum Tag."
+        },
+        {
+          title: "Einfache Abwicklung",
+          text: "Schnelle Übergabe, klare Konditionen und direkte Kontaktaufnahme per Telefon oder WhatsApp."
+        }
+      ],
+      infoCards: [
+        {
+          title: "Zustellung",
+          points: ["unkompliziert", "beforzugt", "gegen Kostenübernahme"]
+        },
+        {
+          title: "Selbstabholung",
+          points: [ "Führerschein Klasse BE ", "Passendes Zugfahrzeug ", "Anhängelast >3000Kg", "Stützlast >120Kg"]
+        },
+        {
+          title: "Rückgabe",
+          points: ["Durchsicht", "Inventur"]
+        },
+        {
+          title: "Sonstiges",
+          points: ["Pauschalpreise beinhalten Unterweisung und Rückg", "Rückgabe gereinigt / nach Absprache"]
+        }
+      ],
+      contact: {
+        title: "Interesse am Anhänger?",
+        text: "Schreib oder ruf einfach an. Am schnellsten geht die Reservierung meist per Telefon oder WhatsApp.",
+        bullets: [
+          "Flexible Terminvereinbarung",
+          "Abholung oder Zustellung",
+          "Langzeitmiete auf Anfrage"
+        ],
+        lines: [
+          { label: "Telefon", value: "+43 660 9055977 ", href: "tel:+43 660 9055977" },
+          { label: "WhatsApp", value: "Nachricht senden", href: "https://wa.me/436609055977" },
+          { label: "E-Mail", value: "florian.mathe@gmx.at", href: "mailto:florian.mathe@gmx.at" },
+          { label: "Standort", value: "4131, Kirchberg ob der Donau" },
+          { label: "Verfügbarkeit", value: "auf Anfrage" }
+        ]
+      },
+      footerNote: "* Führerschein-Anforderung hängt von zulässigem Gesamtgewicht des Anhängers und des Zugfahrzeugs ab. Bitte im Zweifel vorab selbst prüfen."
+    };
+
+    document.title = DATA.meta.pageTitle;
+    document.getElementById("eyebrow").textContent = DATA.meta.eyebrow;
+    document.getElementById("heroTitle").textContent = DATA.meta.heroTitle;
+    document.getElementById("heroLead").textContent = DATA.meta.heroLead;
+
+    const imagePath = (file) => DATA.images.basePath + file;
+
+    const heroImage = document.getElementById("heroImage");
+    heroImage.src = imagePath(DATA.images.hero);
+    heroImage.alt = DATA.meta.heroTitle;
+
+    const heroThumbs = document.getElementById("heroThumbs");
+    DATA.images.thumbs.forEach((img) => {
+      const div = document.createElement("div");
+      div.className = "thumb";
+      div.innerHTML = `<img src="${imagePath(img.file)}" alt="${img.alt}">`;
+      heroThumbs.appendChild(div);
+    });
+
+    const heroStats = document.getElementById("heroStats");
+    DATA.heroStats.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "stat";
+      div.innerHTML = `<div class="stat-label">${item.label}</div><div class="stat-value">${item.value}</div>`;
+      heroStats.appendChild(div);
+    });
+
+    const factsGrid = document.getElementById("factsGrid");
+    DATA.facts.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "fact";
+      div.innerHTML = `<div class="fact-label">${item.label}</div><div class="fact-value">${item.value}</div>`;
+      factsGrid.appendChild(div);
+    });
+
+    const pricingGrid = document.getElementById("pricingGrid");
+    DATA.pricing.forEach((item) => {
+      const article = document.createElement("article");
+      article.className = `price-card${item.featured ? " featured" : ""}`;
+      article.innerHTML = `
+        ${item.badge ? `<div class="price-badge">${item.badge}</div>` : ""}
+        <div class="price-title">${item.title}</div>
+        <div class="price-value">${item.price}</div>
+        <div class="price-sub">${item.sub}</div>
+        <ul class="price-list">${item.points.map((p) => `<li>${p}</li>`).join("")}</ul>
+      `;
+      pricingGrid.appendChild(article);
+    });
+
+    const featureCards = document.getElementById("featureCards");
+    DATA.features.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `<h3>${item.title}</h3><p>${item.text}</p>`;
+      featureCards.appendChild(div);
+    });
+
+    const galleryGrid = document.getElementById("galleryGrid");
+    DATA.images.gallery.forEach((img) => {
+      const div = document.createElement("div");
+      div.className = "gallery-card";
+      div.innerHTML = `<img src="${imagePath(img.file)}" alt="${img.alt}">`;
+      galleryGrid.appendChild(div);
+    });
+
+    const infoCards = document.getElementById("infoCards");
+    DATA.infoCards.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `<h3>${item.title}</h3><ul class="check-list">${item.points.map((p) => `<li>${p}</li>`).join("")}</ul>`;
+      infoCards.appendChild(div);
+    });
+
+    document.getElementById("ctaTitle").textContent = DATA.contact.title;
+    document.getElementById("ctaText").textContent = DATA.contact.text;
+    document.getElementById("ctaList").innerHTML = DATA.contact.bullets.map((b) => `<li>${b}</li>`).join("");
+
+    const contactCard = document.getElementById("contactCard");
+    DATA.contact.lines.forEach((line) => {
+      const p = document.createElement("p");
+      p.className = "contact-line";
+      p.innerHTML = line.href
+        ? `<strong>${line.label}:</strong> <a href="${line.href}">${line.value}</a>`
+        : `<strong>${line.label}:</strong> ${line.value}`;
+      contactCard.appendChild(p);
+    });
+
+    document.getElementById("footerNote").textContent = DATA.footerNote;
+  </script>
+</body>
+</html>
